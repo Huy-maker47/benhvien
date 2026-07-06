@@ -1,174 +1,434 @@
 ﻿@{
     ViewData["Title"] = "Đăng nhập";
+    Layout = "_Layout";
 }
 
 <style>
     body {
-        background: #f5f5f5;
+        background: #f0f2f5;
     }
 
-    .login-container {
-        min-height: 85vh;
+    .login-wrapper {
+        min-height: 88vh;
         display: flex;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
     }
 
     .login-card {
         width: 100%;
-        max-width: 500px;
+        max-width: 440px;
         border: none;
-        border-radius: 15px;
+        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-
-    .login-header {
-        background: #d62828;
-        color: white;
-        text-align: center;
-        padding: 25px;
-    }
-
-    .login-header h2 {
-        margin: 0;
-        font-weight: 700;
-    }
-
-    .login-body {
-        padding: 35px;
+        box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
         background: white;
     }
 
-    .form-control {
-        height: 50px;
-        border-radius: 10px;
+    .login-header {
+        background: linear-gradient(135deg, #c62828 0%, #d32f2f 60%, #e53935 100%);
+        color: white;
+        text-align: center;
+        padding: 36px 30px 28px;
+        position: relative;
+        overflow: hidden;
     }
 
-    .btn-login {
-        background: #d62828;
-        color: white;
-        height: 50px;
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .login-header::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: -20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .login-header h2 {
+            margin: 0 0 6px;
+            font-weight: 800;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+
+        .login-header p {
+            margin: 0;
+            opacity: 0.85;
+            font-size: 0.9rem;
+        }
+
+    .login-body {
+        padding: 32px 36px 36px;
+    }
+
+    .form-label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        height: 48px;
         border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        padding: 0 44px 0 14px;
+        font-size: 0.95rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #fafafa;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #d32f2f;
+            box-shadow: 0 0 0 3px rgba(211,47,47,0.12);
+            background: white;
+            outline: none;
+        }
+
+        .form-control::placeholder {
+            color: #bbb;
+        }
+
+        .form-control.is-invalid {
+            border-color: #e53935;
+            box-shadow: none;
+        }
+
+        .form-control.is-valid {
+            border-color: #43a047;
+            box-shadow: none;
+        }
+
+    /* password wrapper */
+    .pw-wrapper {
+        position: relative;
+    }
+
+    .pw-toggle {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: #aaa;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s;
+    }
+
+        .pw-toggle:hover {
+            color: #d32f2f;
+        }
+
+        .pw-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+    /* validation */
+    .invalid-feedback {
+        font-size: 0.8rem;
+        color: #e53935;
+        margin-top: 5px;
+        display: none;
+    }
+
+    .was-validated .invalid-feedback,
+    .show-error .invalid-feedback {
+        display: block;
+    }
+
+    .pw-strength {
+        margin-top: 6px;
+        display: none;
+    }
+
+        .pw-strength.visible {
+            display: block;
+        }
+
+    .strength-bar {
+        height: 4px;
+        border-radius: 4px;
+        background: #eee;
+        overflow: hidden;
+        margin-bottom: 4px;
+    }
+
+    .strength-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s, background 0.3s;
+        width: 0%;
+    }
+
+    .strength-text {
+        font-size: 0.75rem;
         font-weight: 600;
     }
 
-    .btn-login:hover {
-        background: #b71c1c;
-        color: white;
+    .links-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
     }
 
-    .register-btn {
+        .links-row a {
+            font-size: 0.82rem;
+            color: #d32f2f;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .links-row a:hover {
+                text-decoration: underline;
+            }
+
+    .btn-login {
+        background: linear-gradient(135deg, #c62828, #d32f2f);
+        color: white;
         height: 50px;
         border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        width: 100%;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(211,47,47,0.35);
     }
 
-    .blood-icon {
-        font-size: 50px;
-        margin-bottom: 10px;
+        .btn-login:hover {
+            background: linear-gradient(135deg, #b71c1c, #c62828);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(211,47,47,0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 24px 0 20px;
+        color: #bbb;
+        font-size: 0.82rem;
+    }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #eee;
+        }
+
+    .btn-register {
+        height: 48px;
+        border-radius: 10px;
+        border: 2px solid #d32f2f;
+        color: #d32f2f;
+        font-weight: 700;
+        font-size: 0.95rem;
+        width: 100%;
+        background: white;
+        transition: all 0.2s;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+
+        .btn-register:hover {
+            background: #d32f2f;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    .register-hint {
+        text-align: center;
+        font-size: 0.85rem;
+        color: #888;
+        margin-bottom: 12px;
+    }
+
+    .server-error {
+        border-radius: 10px;
+        font-size: 0.88rem;
+        margin-top: 16px;
+        border: none;
+        background: #ffebee;
+        color: #c62828;
+        padding: 12px 16px;
     }
 </style>
 
-<div class="login-container">
-
-    <div class="card login-card">
-
+<div class="login-wrapper">
+    <div class="login-card">
         <div class="login-header">
-
-            <div class="blood-icon">
-                🩸
-            </div>
-
-            <h2>BLOOD LINK</h2>
-
-            <p class="mb-0">
-                Đăng nhập hệ thống hiến máu
-            </p>
-
+            <h2>BLOOD LINKS</h2>
+            <p>Đăng nhập hệ thống hiến máu</p>
         </div>
 
         <div class="login-body">
+            <form id="loginForm" asp-controller="Account" asp-action="Login" method="post" novalidate>
 
-            <form asp-controller="Account" asp-action="Login" method="post">
-
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Email
-                    </label>
-
+                <!-- Email -->
+                <div class="mb-3" id="emailGroup">
+                    <label class="form-label">Email</label>
                     <input type="email"
+                           id="email"
                            name="email"
                            class="form-control"
-                           placeholder="Nhập email" />
-
+                           placeholder="example@gmail.com"
+                           autocomplete="email" />
+                    <div class="invalid-feedback" id="emailError"></div>
                 </div>
 
-                <div class="mb-3">
-
-                    <label class="form-label">
-                        Mật khẩu
-                    </label>
-
-                    <input type="password"
-                           name="password"
-                           class="form-control"
-                           placeholder="Nhập mật khẩu" />
-
+                <!-- Password -->
+                <div class="mb-3" id="passwordGroup">
+                    <label class="form-label">Mật khẩu</label>
+                    <div class="pw-wrapper">
+                        <input type="password"
+                               id="password"
+                               name="password"
+                               class="form-control"
+                               placeholder="Nhập mật khẩu"
+                               autocomplete="current-password" />
+                        <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1" title="Hiện/ẩn mật khẩu">
+                            <!-- eye open -->
+                            <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <!-- eye slash -->
+                            <svg id="eyeSlash" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="invalid-feedback" id="passwordError"></div>
                 </div>
 
-                <div class="d-flex justify-content-between mb-3">
-
-                    <a asp-controller="Account"
-                       asp-action="ForgotPassword"
-                       class="text-danger text-decoration-none">
-                        Quên mật khẩu?
-                    </a>
-
-                    <a asp-controller="Account"
-                       asp-action="ChangePassword"
-                       class="text-danger text-decoration-none">
-                        Đổi mật khẩu
-                    </a>
-
+                <div class="links-row">
+                    <a asp-controller="Account" asp-action="ForgotPassword">Quên mật khẩu?</a>
+                    <a asp-controller="Account" asp-action="ChangePassword">Đổi mật khẩu</a>
                 </div>
 
-                <button type="submit"
-                        class="btn btn-login w-100">
-
-                    Đăng nhập
-
-                </button>
-
+                <button type="submit" class="btn-login">Đăng nhập</button>
             </form>
 
             @if (ViewBag.Error != null)
             {
-                <div class="alert alert-danger mt-3">
-                    @ViewBag.Error
-                </div>
+                <div class="server-error">⚠️ @ViewBag.Error</div>
             }
 
-            <hr />
-
-            <div class="text-center">
-
-                <p class="mb-3">
-                    Chưa có tài khoản?
-                </p>
-
-                <a asp-controller="Account"
-                   asp-action="Register"
-                   class="btn btn-outline-danger register-btn w-100">
-
-                    Đăng ký ngay
-
-                </a>
-
-            </div>
-
+            <div class="divider">hoặc</div>
+            <p class="register-hint">Chưa có tài khoản?</p>
+            <a asp-controller="Account" asp-action="Register" class="btn-register">Đăng ký ngay</a>
         </div>
-
     </div>
-
 </div>
+
+<script>
+    // ── Eye toggle ──────────────────────────────────────────
+    const pwInput  = document.getElementById('password');
+    const pwToggle = document.getElementById('pwToggle');
+    const eyeOpen  = document.getElementById('eyeOpen');
+    const eyeSlash = document.getElementById('eyeSlash');
+
+    pwToggle.addEventListener('click', () => {
+        const isText = pwInput.type === 'text';
+        pwInput.type = isText ? 'password' : 'text';
+        eyeOpen.style.display  = isText ? '' : 'none';
+        eyeSlash.style.display = isText ? 'none' : '';
+    });
+
+    // ── Validation helpers ──────────────────────────────────
+    function setError(input, errorEl, msg) {
+        input.classList.add('is-invalid');
+        input.classList.remove('is-valid');
+        errorEl.textContent = msg;
+        errorEl.style.display = 'block';
+    }
+    function setValid(input, errorEl) {
+        input.classList.remove('is-invalid');
+        input.classList.add('is-valid');
+        errorEl.style.display = 'none';
+    }
+    function clearState(input, errorEl) {
+        input.classList.remove('is-invalid', 'is-valid');
+        errorEl.style.display = 'none';
+    }
+
+    // ── Email validation ────────────────────────────────────
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]{2,}$/;
+
+    emailInput.addEventListener('blur', validateEmail);
+    emailInput.addEventListener('input', () => {
+        if (emailInput.classList.contains('is-invalid')) validateEmail();
+    });
+
+    function validateEmail() {
+        const val = emailInput.value.trim();
+        if (!val) {
+            setError(emailInput, emailError, 'Email không được để trống.');
+        } else if (!emailRegex.test(val)) {
+            setError(emailInput, emailError, 'Email không đúng định dạng (vd: user@@gmail.com).');
+        } else {
+            setValid(emailInput, emailError);
+        }
+    }
+
+    // ── Password validation ─────────────────────────────────
+    const passwordError = document.getElementById('passwordError');
+
+    pwInput.addEventListener('blur', validatePassword);
+    pwInput.addEventListener('input', () => {
+        if (pwInput.classList.contains('is-invalid')) validatePassword();
+    });
+
+    function validatePassword() {
+        const val = pwInput.value;
+        if (!val) {
+            setError(pwInput, passwordError, 'Mật khẩu không được để trống.');
+        } else if (val.length < 6) {
+            setError(pwInput, passwordError, 'Mật khẩu phải có ít nhất 6 ký tự.');
+        } else {
+            setValid(pwInput, passwordError);
+        }
+    }
+
+    // ── Form submit ─────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+        validateEmail();
+        validatePassword();
+        if (document.querySelectorAll('.is-invalid').length > 0) {
+            e.preventDefault();
+        }
+    });
+</script>

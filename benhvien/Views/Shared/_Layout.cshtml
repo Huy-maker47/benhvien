@@ -4,118 +4,298 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>BloodLink</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BloodLinks</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
     <style>
-        .search-box {
-            width: 300px;
+        /* ── NAVBAR ── */
+        .navbar {
+            background: linear-gradient(135deg, #b71c1c 0%, #d32f2f 100%) !important;
+            padding: 0 0;
+            min-height: 64px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
         }
 
         .navbar-brand {
-            font-weight: bold;
-            font-size: 24px;
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .navbar-brand .brand-dot {
+                color: #ffcdd2;
+            }
+
+        /* Search */
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1.5px solid rgba(255,255,255,0.25);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+            .search-form:focus-within {
+                background: rgba(255,255,255,0.22);
+                border-color: rgba(255,255,255,0.5);
+            }
+
+            .search-form input {
+                background: transparent;
+                border: none;
+                color: white;
+                padding: 8px 14px;
+                width: 240px;
+                font-size: 0.88rem;
+                outline: none;
+            }
+
+                .search-form input::placeholder {
+                    color: rgba(255,255,255,0.6);
+                }
+
+            .search-form button {
+                background: rgba(255,255,255,0.2);
+                border: none;
+                border-left: 1.5px solid rgba(255,255,255,0.2);
+                color: white;
+                padding: 8px 14px;
+                font-size: 0.88rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background 0.2s;
+                white-space: nowrap;
+            }
+
+                .search-form button:hover {
+                    background: rgba(255,255,255,0.3);
+                }
+
+        /* Dropdown chung */
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+            .nav-dropdown-toggle:hover,
+            .nav-dropdown:hover .nav-dropdown-toggle {
+                background: rgba(255,255,255,0.15);
+            }
+
+            .nav-dropdown-toggle .caret {
+                font-size: 0.65rem;
+                opacity: 0.75;
+                transition: transform 0.2s;
+            }
+
+        .nav-dropdown:hover .caret {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            min-width: 190px;
+            overflow: hidden;
+            z-index: 999;
+            border: 1px solid #f0f0f0;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-menu {
+            display: block;
+        }
+
+        .nav-dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 18px;
+            font-size: 0.88rem;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+            .nav-dropdown-menu a:last-child {
+                border-bottom: none;
+            }
+
+            .nav-dropdown-menu a:hover {
+                background: #fff5f5;
+                color: #d32f2f;
+            }
+
+            .nav-dropdown-menu a i {
+                width: 16px;
+                text-align: center;
+                color: #d32f2f;
+                font-size: 0.82rem;
+            }
+
+        .menu-divider {
+            height: 1px;
+            background: #f0f0f0;
+            margin: 2px 0;
+        }
+
+        /* Username pill */
+        .username-pill {
+            background: rgba(255,255,255,0.15);
+            border: 1.5px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 0.88rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .username-pill i {
+                font-size: 0.8rem;
+                opacity: 0.8;
+            }
+
+        .navbar-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        @@media (max-width: 991px) {
+            .search-form input {
+                width: 160px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-
+            <!-- Brand -->
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-                BloodLink
+                BLOOD<span class="brand-dot">LINKS</span>
             </a>
 
-            <button class="navbar-toggler"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent">
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    style="border-color:rgba(255,255,255,0.4)">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
-
-                <!-- Search Form -->
-                <form class="d-flex ms-auto me-3"
-                      asp-controller="Home"
-                      asp-action="Search"
-                      method="get">
-
-                    <input class="form-control search-box"
-                           type="search"
-                           name="keyword"
-                           placeholder="Tìm người hiến máu, bệnh viện..."
-                           aria-label="Search">
-
-                    <button class="btn btn-light ms-2"
-                            type="submit">
-                        🔍 Tìm
+                <!-- Search -->
+                <form class="search-form ms-auto me-3"
+                      asp-controller="Home" asp-action="Search" method="get">
+                    <input type="search" name="keyword"
+                           placeholder="Tìm người hiến máu, bệnh viện..." />
+                    <button type="submit">
+                        <i class="fa fa-search"></i> Tìm
                     </button>
-
                 </form>
 
-                <!-- Menu -->
-                <ul class="navbar-nav">
-
+                <!-- Right menu -->
+                <div class="navbar-nav-right">
                     @if (Context.Session.GetString("FullName") != null)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-white fw-bold"
-                               asp-controller="Account"
-                               asp-action="Profile">
-                                👤 Hồ sơ của tôi
-                            </a>
-                        </li>
+                        <!-- Tên người dùng -->
+                        <span class="username-pill">
+                            <i class="fa fa-circle-user"></i>
+                            @Context.Session.GetString("FullName")
+                        </span>
 
-                        <li class="nav-item">
-                            <span class="nav-link">
-                                Xin chào,
-                                @Context.Session.GetString("FullName")
-                            </span>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Account"
-                               asp-action="Logout">
-                                Logout
-                            </a>
-                        </li>
+                        <!-- Dropdown profile -->
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle">
+                                Hồ sơ <span class="caret">▼</span>
+                            </button>
+                            <div class="nav-dropdown-menu">
+                                <a asp-controller="Account" asp-action="Profile">
+                                    <i class="fa fa-user"></i> Xem hồ sơ
+                                </a>
+                                <div class="menu-divider"></div>
+                                <a asp-controller="BloodRequest" asp-action="Index">
+                                    <i class="fa fa-droplet"></i> Yêu cầu máu
+                                </a>
+                                <div class="menu-divider"></div>
+                                <a asp-controller="Account" asp-action="Logout"
+                                   style="color:#d32f2f">
+                                    <i class="fa fa-right-from-bracket"></i> Đăng xuất
+                                </a>
+                            </div>
+                        </div>
                     }
                     else
                     {
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Account"
-                               asp-action="Login">
-                                Login
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                               asp-controller="Account"
-                               asp-action="Register">
-                                Register
-                            </a>
-                        </li>
+                        <!-- Dropdown đăng nhập -->
+                        <div class="nav-dropdown">
+                            <button class="nav-dropdown-toggle">
+                                Đăng nhập <span class="caret">▼</span>
+                            </button>
+                            <div class="nav-dropdown-menu">
+                                <a asp-controller="Account" asp-action="Login">
+                                    <i class="fa fa-right-to-bracket"></i> Đăng nhập
+                                </a>
+                                <div class="menu-divider"></div>
+                                <a asp-controller="Account" asp-action="Register">
+                                    <i class="fa fa-user-plus"></i> Đăng ký
+                                </a>
+                            </div>
+                        </div>
                     }
-
-                </ul>
-
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Content -->
-    <div class="container mt-4">
+    <div>
         @RenderBody()
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+<script>
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('.navbar');
+        if (window.scrollY > 10) {
+            nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.25)';
+            nav.style.transition = 'box-shadow 0.3s';
+        } else {
+            nav.style.boxShadow = '0 2px 12px rgba(0,0,0,0.18)';
+        }
+    });
+</script>

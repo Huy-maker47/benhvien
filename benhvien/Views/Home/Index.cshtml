@@ -119,9 +119,18 @@
         <div class="container text-center">
             <h2>Sẵn sàng tạo nên sự khác biệt?</h2>
             <p>Mỗi giọt máu bạn cho đi có thể cứu đến 3 cuộc sống.</p>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-cta">
-                Bắt đầu ngay hôm nay
-            </a>
+            @if (Context.Session.GetString("UserId") != null)
+            {
+                <a asp-controller="User" asp-action="Index" class="btn btn-cta">
+                    Bắt đầu ngay hôm nay
+                </a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Register" class="btn btn-cta">
+                    Bắt đầu ngay hôm nay
+                </a>
+            }
         </div>
     </section>
 

@@ -1,70 +1,311 @@
 ﻿@model benhvien.Models.User
 
-<div class="row justify-content-center">
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "_Layout";
+}
 
-    <div class="col-md-6">
+<style>
+    body { background: #f0f2f5; }
 
-        <div class="card shadow">
+    .register-wrapper {
+        min-height: 92vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 16px;
+    }
 
-            <div class="card-header bg-danger text-white">
+    .register-card {
+        width: 100%;
+        max-width: 520px;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 16px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+        background: white;
+    }
 
-                <h3 class="text-center">
-                    Đăng ký tài khoản
-                </h3>
+    /* Header */
+    .register-header {
+        background: linear-gradient(135deg, #c62828 0%, #d32f2f 60%, #e53935 100%);
+        color: white;
+        text-align: center;
+        padding: 30px 30px 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .register-header::before {
+        content: '';
+        position: absolute;
+        top: -30px; right: -30px;
+        width: 120px; height: 120px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.07);
+    }
+    .register-header::after {
+        content: '';
+        position: absolute;
+        bottom: -20px; left: -20px;
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.05);
+    }
+    .register-header h2 {
+        margin: 0 0 5px;
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: 1px;
+        position: relative;
+    }
+    .register-header p {
+        margin: 0;
+        opacity: 0.85;
+        font-size: 0.88rem;
+        position: relative;
+    }
 
+    /* Body */
+    .register-body { padding: 28px 36px 36px; }
 
-            </div>
+    .form-label {
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 5px;
+    }
 
-            <div class="card-body">
-                <h4 class="text-danger">
-                    @ViewBag.Error
-                </h4>
-                <form method="post">
+    .form-control, .form-select {
+        height: 46px;
+        border-radius: 10px;
+        border: 1.5px solid #e0e0e0;
+        padding: 0 14px;
+        font-size: 0.93rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        background: #fafafa;
+        width: 100%;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #d32f2f;
+        box-shadow: 0 0 0 3px rgba(211,47,47,0.12);
+        background: white;
+        outline: none;
+    }
+    .form-control::placeholder { color: #bbb; }
+    .form-control.is-invalid, .form-select.is-invalid {
+        border-color: #e53935;
+        box-shadow: none;
+    }
+    .form-control.is-valid, .form-select.is-valid {
+        border-color: #43a047;
+        box-shadow: none;
+    }
 
-                    <div class="mb-3">
+    /* Password wrapper */
+    .pw-wrapper { position: relative; }
+    .pw-wrapper .form-control { padding-right: 44px; }
+    .pw-toggle {
+        position: absolute;
+        right: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        color: #aaa;
+        display: flex;
+        align-items: center;
+        transition: color 0.2s;
+    }
+    .pw-toggle:hover { color: #d32f2f; }
+    .pw-toggle svg { width: 19px; height: 19px; }
 
-                        <label>Họ tên</label>
+    /* Password strength */
+    .pw-strength { margin-top: 6px; }
+    .strength-bar {
+        height: 4px;
+        border-radius: 4px;
+        background: #eee;
+        overflow: hidden;
+        margin-bottom: 4px;
+    }
+    .strength-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s, background 0.3s;
+        width: 0%;
+    }
+    .strength-text { font-size: 0.73rem; font-weight: 600; }
 
+    /* Validation messages */
+    .invalid-feedback {
+        font-size: 0.78rem;
+        color: #e53935;
+        margin-top: 4px;
+        display: none;
+    }
+    .show-error .invalid-feedback { display: block; }
+
+    /* 2-col grid */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 16px;
+    }
+    @@media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* Submit */
+    .btn-register-submit {
+        background: linear-gradient(135deg, #c62828, #d32f2f);
+        color: white;
+        height: 50px;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        border: none;
+        width: 100%;
+        transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(211,47,47,0.35);
+        margin-top: 4px;
+    }
+    .btn-register-submit:hover {
+        background: linear-gradient(135deg, #b71c1c, #c62828);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(211,47,47,0.4);
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 22px 0 18px;
+        color: #bbb;
+        font-size: 0.82rem;
+    }
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #eee;
+    }
+
+    .btn-login-link {
+        height: 46px;
+        border-radius: 10px;
+        border: 2px solid #d32f2f;
+        color: #d32f2f;
+        font-weight: 700;
+        font-size: 0.93rem;
+        width: 100%;
+        background: white;
+        transition: all 0.2s;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+    }
+    .btn-login-link:hover {
+        background: #d32f2f;
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .server-error {
+        border-radius: 10px;
+        font-size: 0.88rem;
+        margin-bottom: 16px;
+        background: #ffebee;
+        color: #c62828;
+        padding: 12px 16px;
+    }
+
+    .section-divider {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: #bbb;
+        margin: 4px 0 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .section-divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #f0f0f0;
+    }
+</style>
+
+<div class="register-wrapper">
+    <div class="register-card">
+        <div class="register-header">
+            <h2>BLOOD LINKS</h2>
+            <p>Tạo tài khoản mới — Tham gia cộng đồng hiến máu</p>
+        </div>
+
+        <div class="register-body">
+            @if (ViewBag.Error != null)
+            {
+                <div class="server-error">⚠️ @ViewBag.Error</div>
+            }
+
+            <form id="registerForm" method="post" novalidate>
+
+                <!-- Thông tin cá nhân -->
+                <div class="section-divider">Thông tin cá nhân</div>
+
+                <div class="form-row">
+                    <div class="mb-3" id="nameGroup">
+                        <label class="form-label">Họ tên <span class="text-danger">*</span></label>
                         <input asp-for="FullName"
-                               class="form-control" />
-
+                               id="fullName"
+                               class="form-control"
+                               placeholder="Nguyễn Văn A" />
+                        <div class="invalid-feedback" id="nameError"></div>
                     </div>
 
-                    <div class="mb-3">
-
-                        <label>Email</label>
-
-                        <input asp-for="Email"
-                               class="form-control" />
-
+                    <div class="mb-3" id="ageGroup">
+                        <label class="form-label">Tuổi <span class="text-danger">*</span></label>
+                        <input asp-for="Age"
+                               id="age"
+                               type="number"
+                               class="form-control"
+                               placeholder="18" />
+                        <div class="invalid-feedback" id="ageError"></div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
+                <div class="mb-3" id="emailGroup">
+                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                    <input asp-for="Email"
+                           id="email"
+                           type="email"
+                           class="form-control"
+                           placeholder="example@gmail.com"
+                           autocomplete="email" />
+                    <div class="invalid-feedback" id="emailError"></div>
+                </div>
 
-                        <label>Số điện thoại</label>
-
+                <div class="form-row">
+                    <div class="mb-3" id="phoneGroup">
+                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                         <input asp-for="Phone"
-                               class="form-control" />
-
+                               id="phone"
+                               type="tel"
+                               class="form-control"
+                               placeholder="0901234567" />
+                        <div class="invalid-feedback" id="phoneError"></div>
                     </div>
 
-                    <div class="mb-3">
-
-                        <label>Password</label>
-
-                        <input asp-for="Password"
-                               type="password"
-                               class="form-control" />
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label>Nhóm máu</label>
-
-                        <select asp-for="BloodType"
-                                class="form-control">
-
+                    <div class="mb-3" id="bloodGroup">
+                        <label class="form-label">Nhóm máu <span class="text-danger">*</span></label>
+                        <select asp-for="BloodType" id="bloodType" class="form-select">
+                            <option value="">-- Chọn --</option>
                             <option>O+</option>
                             <option>O-</option>
                             <option>A+</option>
@@ -73,59 +314,243 @@
                             <option>B-</option>
                             <option>AB+</option>
                             <option>AB-</option>
-
                         </select>
-
+                        <div class="invalid-feedback" id="bloodError"></div>
                     </div>
+                </div>
 
-                    <div class="mb-3">
+                <div class="mb-3" id="addressGroup">
+                    <label class="form-label">Địa chỉ</label>
+                    <input asp-for="Address"
+                           id="address"
+                           class="form-control"
+                           placeholder="Số nhà, đường, quận, thành phố" />
+                    <div class="invalid-feedback" id="addressError"></div>
+                </div>
 
-                        <label>Tuổi</label>
+                <!-- Tài khoản -->
+                <div class="section-divider mt-2">Tài khoản</div>
 
-                        <input asp-for="Age"
-                               class="form-control" />
-
+                <div class="mb-3" id="passwordGroup">
+                    <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                    <div class="pw-wrapper">
+                        <input asp-for="Password"
+                               id="password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Ít nhất 6 ký tự"
+                               autocomplete="new-password" />
+                        <button type="button" class="pw-toggle" id="pwToggle" tabindex="-1">
+                            <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg id="eyeSlash" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
                     </div>
-
-                    <div class="mb-3">
-
-                        <label>Địa chỉ</label>
-
-                        <input asp-for="Address"
-                               class="form-control" />
-
+                    <!-- Strength bar -->
+                    <div class="pw-strength mt-2">
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <span class="strength-text" id="strengthText"></span>
                     </div>
+                    <div class="invalid-feedback" id="passwordError"></div>
+                </div>
 
-                    <div class="mb-3">
-
-                        <label>Loại tài khoản</label>
-
-                        <select asp-for="Role"
-                                class="form-control">
-
-                            <option value="User">
-                                Cá nhân
-                            </option>@* ll *@
-
-
-
-                        </select>
-
+                <div class="mb-4" id="confirmGroup">
+                    <label class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                    <div class="pw-wrapper">
+                        <input type="password"
+                               id="confirmPassword"
+                               class="form-control"
+                               placeholder="Nhập lại mật khẩu"
+                               autocomplete="new-password" />
+                        <button type="button" class="pw-toggle" id="pwToggle2" tabindex="-1">
+                            <svg id="eyeOpen2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <svg id="eyeSlash2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display:none">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                        </button>
                     </div>
+                    <div class="invalid-feedback" id="confirmError"></div>
+                </div>
 
-                    <button type="submit"
-                            class="btn btn-danger w-100">
+                <input asp-for="Role" type="hidden" value="User" />
 
-                        Đăng ký
+                <button type="submit" class="btn-register-submit">Đăng ký</button>
+            </form>
 
-                    </button>
-
-                </form>
-
-            </div>
-
+            <div class="divider">đã có tài khoản?</div>
+            <a asp-controller="Account" asp-action="Login" class="btn-login-link">Đăng nhập</a>
         </div>
-
     </div>
-
 </div>
+
+<script>
+    // ── Eye toggles ─────────────────────────────────────────
+    function setupEye(inputId, toggleId, openId, slashId) {
+        const inp   = document.getElementById(inputId);
+        const btn   = document.getElementById(toggleId);
+        const open  = document.getElementById(openId);
+        const slash = document.getElementById(slashId);
+        btn.addEventListener('click', () => {
+            const isText = inp.type === 'text';
+            inp.type     = isText ? 'password' : 'text';
+            open.style.display  = isText ? '' : 'none';
+            slash.style.display = isText ? 'none' : '';
+        });
+    }
+    setupEye('password',        'pwToggle',  'eyeOpen',  'eyeSlash');
+    setupEye('confirmPassword', 'pwToggle2', 'eyeOpen2', 'eyeSlash2');
+
+    // ── Helpers ──────────────────────────────────────────────
+    function setError(el, errEl, msg) {
+        el.classList.add('is-invalid');
+        el.classList.remove('is-valid');
+        errEl.textContent = msg;
+        errEl.style.display = 'block';
+    }
+    function setValid(el, errEl) {
+        el.classList.remove('is-invalid');
+        el.classList.add('is-valid');
+        errEl.style.display = 'none';
+    }
+
+    // ── Password strength ────────────────────────────────────
+    const pwInput   = document.getElementById('password');
+    const fillEl    = document.getElementById('strengthFill');
+    const textEl    = document.getElementById('strengthText');
+
+    pwInput.addEventListener('input', updateStrength);
+
+    function calcStrength(val) {
+        let score = 0;
+        if (val.length >= 6)  score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val)) score++;
+        if (/[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        return score;
+    }
+    function updateStrength() {
+        const val = pwInput.value;
+        if (!val) { fillEl.style.width = '0%'; textEl.textContent = ''; return; }
+        const s = calcStrength(val);
+        const levels = [
+            { pct: '20%', color: '#ef5350', label: 'Rất yếu' },
+            { pct: '40%', color: '#ff7043', label: 'Yếu' },
+            { pct: '60%', color: '#ffa726', label: 'Trung bình' },
+            { pct: '80%', color: '#66bb6a', label: 'Mạnh' },
+            { pct: '100%', color: '#43a047', label: 'Rất mạnh' },
+        ];
+        const lv = levels[Math.min(s - 1, 4)] || levels[0];
+        fillEl.style.width      = lv.pct;
+        fillEl.style.background = lv.color;
+        textEl.textContent      = lv.label;
+        textEl.style.color      = lv.color;
+    }
+
+    // ── Field validators ─────────────────────────────────────
+    const fields = {
+        fullName:        { el: document.getElementById('fullName'),        err: document.getElementById('nameError') },
+        email:           { el: document.getElementById('email'),           err: document.getElementById('emailError') },
+        phone:           { el: document.getElementById('phone'),           err: document.getElementById('phoneError') },
+        bloodType:       { el: document.getElementById('bloodType'),       err: document.getElementById('bloodError') },
+        age:             { el: document.getElementById('age'),             err: document.getElementById('ageError') },
+        password:        { el: document.getElementById('password'),        err: document.getElementById('passwordError') },
+        confirmPassword: { el: document.getElementById('confirmPassword'), err: document.getElementById('confirmError') },
+    };
+
+    const emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]{2,}$/;
+    const phoneRegex = /^(0[3|5|7|8|9])[0-9]{8}$/;
+
+    function validateFullName() {
+        const { el, err } = fields.fullName;
+        const val = el.value.trim();
+        if (!val)          return setError(el, err, 'Họ tên không được để trống.');
+        if (val.length < 2) return setError(el, err, 'Họ tên phải có ít nhất 2 ký tự.');
+        setValid(el, err);
+    }
+    function validateEmail() {
+        const { el, err } = fields.email;
+        const val = el.value.trim();
+        if (!val)                   return setError(el, err, 'Email không được để trống.');
+        if (!emailRegex.test(val))  return setError(el, err, 'Email không đúng định dạng (vd: user@@gmail.com).');
+        setValid(el, err);
+    }
+    function validatePhone() {
+        const { el, err } = fields.phone;
+        const val = el.value.trim();
+        if (!val)                  return setError(el, err, 'Số điện thoại không được để trống.');
+        if (!phoneRegex.test(val)) return setError(el, err, 'Số điện thoại không hợp lệ (vd: 0901234567).');
+        setValid(el, err);
+    }
+    function validateBloodType() {
+        const { el, err } = fields.bloodType;
+        if (!el.value) return setError(el, err, 'Vui lòng chọn nhóm máu.');
+        setValid(el, err);
+    }
+    function validateAge() {
+        const { el, err } = fields.age;
+        const val = parseInt(el.value);
+        if (!el.value)    return setError(el, err, 'Tuổi không được để trống.');
+        if (isNaN(val))   return setError(el, err, 'Tuổi phải là số.');
+        if (val < 18)     return setError(el, err, 'Phải đủ 18 tuổi để hiến máu.');
+        if (val > 65)     return setError(el, err, 'Tuổi tối đa để hiến máu là 65.');
+        setValid(el, err);
+    }
+    function validatePassword() {
+        const { el, err } = fields.password;
+        const val = el.value;
+        if (!val)           return setError(el, err, 'Mật khẩu không được để trống.');
+        if (val.length < 6) return setError(el, err, 'Mật khẩu phải có ít nhất 6 ký tự.');
+        setValid(el, err);
+    }
+    function validateConfirm() {
+        const { el, err } = fields.confirmPassword;
+        const val = el.value;
+        if (!val)                          return setError(el, err, 'Vui lòng xác nhận mật khẩu.');
+        if (val !== fields.password.el.value) return setError(el, err, 'Mật khẩu xác nhận không khớp.');
+        setValid(el, err);
+    }
+
+    // Attach blur + input listeners
+    const validatorMap = [
+        [fields.fullName,        validateFullName],
+        [fields.email,           validateEmail],
+        [fields.phone,           validatePhone],
+        [fields.bloodType,       validateBloodType],
+        [fields.age,             validateAge],
+        [fields.password,        validatePassword],
+        [fields.confirmPassword, validateConfirm],
+    ];
+
+    validatorMap.forEach(([f, fn]) => {
+        f.el.addEventListener('blur', fn);
+        f.el.addEventListener('input', () => {
+            if (f.el.classList.contains('is-invalid')) fn();
+        });
+        f.el.addEventListener('change', () => {
+            if (f.el.classList.contains('is-invalid')) fn();
+        });
+    });
+
+    // ── Form submit ──────────────────────────────────────────
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        validateFullName();
+        validateEmail();
+        validatePhone();
+        validateBloodType();
+        validateAge();
+        validatePassword();
+        validateConfirm();
+        if (document.querySelectorAll('.is-invalid').length > 0) {
+            e.preventDefault();
+            document.querySelector('.is-invalid').focus();
+        }
+    });
+</script>
